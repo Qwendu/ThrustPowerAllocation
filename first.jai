@@ -31,5 +31,5 @@ build_Method :: (name : string)
 #run {
 	CC :: #import "Compiler";
 	CC.set_build_options_dc(.{do_output = false});;
-	build_Method("LP_Simplex");
+	build_Method("UnweightedUnconstrainedLinearAllocation");
 }
