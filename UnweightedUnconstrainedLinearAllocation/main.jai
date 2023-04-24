@@ -6,9 +6,10 @@ p :: 12;
 #run main();
 main :: ()
 {
+	print("This is an unconstrained solver trying to solve the constrained problem, this does not work reliably by any stretch of the imagination\n");
 	b := generateControllEffectivenessMatrix(*configuration);
 	print("Coefficient Matrix:\n");
-	LinAlg.view(b);
+	//LinAlg.view(b);
 
 
 	target : [6] float = .[1,0,0,0,0,0];
@@ -42,7 +43,7 @@ minimize :: (using controll_effectiveness_matrix : *Matrix($m, $p), target : *[m
 
 	C: = LinAlg.mul(B_T, inv);
 	print("C:\n");
-	LinAlg.view(C);
+	//LinAlg.view(C);
 	
 	neg := LinAlg.mul(C, controll_effectiveness_matrix);
 
@@ -78,6 +79,23 @@ generateControllEffectivenessMatrix :: (config : *Thruster_Configuration($N)) ->
 	return res;
 }
 
+highest_percent_thruster :: (power : *[$N] float, upper_limits : *[N] float) -> (value : float, idx : int)
+{
+	highest := 0.0;
+	highest_idx := 0;
+	for <<power
+	{
+		l:= (it / (<<upper_limits)[it_index]);
+		if  l > highest
+		{
+			highest = l;
+			highest_idx = it_index;
+		}
+	}
+	
+	return highest, highest_idx;
+}
+
 
 #import "Math";
 #import,file "../util.jai";
@@ -98,7 +116,7 @@ configuration := Thruster_Configuration(12).{
 		.{position = .{0,1,0}, direction = .{-1,0,0}},
 		.{position = .{1,0,1}, direction = .{0,-1,0}},
 		.{position = .{1,0,0}, direction = .{0,0,-1}},
-		.{position = .{-1,0,1}, direction = .{1,0,0}},
+		.{position = .{-1,0,1}, direction = .{0.2,0,0}},
 		.{position = .{-1,0,0}, direction = .{0,1,0}},
 		.{position = .{-1,0,0}, direction = .{0,0,1}},
 		.{position = .{-1,0,0}, direction = .{-1,0,0}},

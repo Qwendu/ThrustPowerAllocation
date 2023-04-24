@@ -25,8 +25,7 @@ calculate_Forces :: (
 	torque : Vector3;
 	for config.thrusters
 	{
-		
-		f:= it.direction * /*clamp(*/params.power[it_index]/*, 0 , 1)*/;
+		f := it.direction * clamp(params.power[it_index], 0 , 1);
 		force += f;
 		torque += cross(it.position, f);
 	}

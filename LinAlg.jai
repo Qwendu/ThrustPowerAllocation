@@ -44,7 +44,7 @@ transpose :: (a : *Matrix($N, $M)) -> *Matrix(M, N)
 
 view :: (mat : *$T/Matrix)
 {
-	#import "Basic";
+
 	fmt :: #bake_arguments formatFloat(width = 6, trailing_width = 6 - 3, zero_removal = .NO);
 	for row: 0..T.Rows-1
 	{
@@ -95,4 +95,5 @@ inverse :: (mat : *Matrix($N, N)) -> *Matrix(N,N)
 	return res;
 }
 
+#import "Basic";
 //svd :: (mat : *$T/Matrix) -> (U : *Matrix(T.Rows, T.Rows), S : *Matrix(T.Rows, T.Cols), V_T : *Matrix(T.Cols, T.Cols))
