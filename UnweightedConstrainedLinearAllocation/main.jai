@@ -1,8 +1,5 @@
 
 
-m :: 6;
-p :: 12;
-
 #run main();
 main :: ()
 {
@@ -19,12 +16,57 @@ main :: ()
 		power_allocation := solve(cem, target, preferred);
 		print("Target:\n%\n", target);
 		print("Power Allocation:\n%\n", power_allocation);
-	
+
+		for 0..3
+		{
+			swapped := 0;
+			n_saturated := 0;
+			for 0..power_allocation.Rows-1
+			{
+				if cem.Cols < cem.Rows  break;
+				pow := power_allocation[it][0];
+				if abs(pow) < EPS || abs(pow - 1) < EPS
+				{
+					// Saturated
+				}else{
+					// Unsaturated
+					swap_Column(cem, swapped, it);
+					{
+						temp := power_allocation[it][0];
+						power_allocation[it][0] = power_allocation[swapped][0];
+						power_allocation[swapped][0] = temp;
+					}
+					{
+						temp := preferred[it][0];
+						preferred[it][0] = preferred[swapped][0];
+						preferred[swapped][0] = temp;
+					}
+				
+					swapped += 1;
+				}
+			}
+			print("Saturated %\n", swapped);
+			unsatisfied_power_allocation := constrained_View(power_allocation, row_end = swapped);
+			new_cem := constrained_View(cem, col_end = swapped);
+			print("New CEM\n%\n", new_cem);
+			if new_cem.Cols < new_cem.Rows  break;
+			new_preferred := constrained_View(preferred, row_end = swapped);
+			print("New perferred\n%\n", new_preferred);
+			new_target := target - (new_cem * unsatisfied_power_allocation);
+			new_allocation := solve(new_cem, target, new_preferred);
+			print("New allocation\n%\n", new_allocation);
+			for 0..swapped-1 power_allocation[it][0] = new_allocation[it][0];
+			power_allocation = unsatisfied_power_allocation;
+			target = new_target;
+			preferred = new_preferred;
+		}
 		power_allocation = reset_Views(power_allocation);
 		result := cem * power_allocation;
 		print("Result:\n%\n", result);
 	}
+
 }
+
 
 
 solve :: (cem : DMatrix, target : DMatrix, preferred : DMatrix) -> DMatrix
@@ -59,17 +101,10 @@ create_Controll_Effectiveness_Matrix :: (configuration : *Thruster_Configuration
 	}
 	return res;
 }
-
-
+#import,file "../DLinAlg.jai";
 #import "Math";
 #import,file "../util.jai";
-#import,file "../DLinAlg.jai";
 #import "Basic";
-
-
-
-
-
 
 configuration := Thruster_Configuration(12).{
 	.[

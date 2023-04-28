@@ -10,6 +10,7 @@ Matrix :: struct(Rows : int, Cols : int)
 }
 
 
+
 mul :: (a : *Matrix($N, $K), b : *Matrix(K, $M)) ->*Matrix(N, M)
 {
 	c := New(Matrix(N,M));
@@ -27,6 +28,7 @@ mul :: (a : *Matrix($N, $K), b : *Matrix(K, $M)) ->*Matrix(N, M)
 	}
 	return c;
 }
+
 
 transpose :: (a : *Matrix($N, $M)) -> *Matrix(M, N)
 {
