@@ -32,6 +32,7 @@ allocate_DMatrix :: (rows : int, cols : int) -> DMatrix
 	res.Cols = cols;
 	res.data.count = res.storage.row * res.storage.col;
 	res.data.data = alloc(size_of(float) * res.data.count);
+	for * res.data { << it = 0;} // Initialize
 
 	return res;
 }

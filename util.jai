@@ -5,6 +5,7 @@ Thruster :: struct
 {
 	position  : Vector3;
 	direction : Vector3;
+	max : float = 1;
 };
 
 Thruster_Configuration :: struct(N: int)
